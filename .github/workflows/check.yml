@@ -1,0 +1,18 @@
+name: check
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: mvn -B test
+      - run: mvn -B package -DskipTests
+      - name: Run console app
+        run: |
+          mkdir -p data
+          printf '1\nB1\nClean Code\nRobert Martin\n2\nM1\nRahul\n1\n6\nB1\nM1\n8\n7\nB1\n3\n0\n' | java -jar target/library-management-system-1.0.jar
+          cat data/books.csv data/members.csv
